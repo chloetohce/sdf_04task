@@ -1,5 +1,0 @@
-public class DataInputStream
-extends FilterInputStream
-implements DataInput
-A data input stream lets an application read primitive Java data types from an underlying input stream in a machine-independent way. An application uses a data output stream to write data that can later be read by a data input stream.
-A DataInputStream is not safe for use by multiple concurrent threads. If a DataInputStream is to be used by more than one thread then access to the data input stream should be controlled by appropriate synchronization.

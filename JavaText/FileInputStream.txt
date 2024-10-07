@@ -1,8 +1,0 @@
-public class FileInputStream
-extends InputStream
-A FileInputStream obtains input bytes from a file in a file system. What files are available depends on the host environment.
-FileInputStream is meant for reading streams of raw bytes such as image data. For reading streams of characters, consider using FileReader.
-API Note:
-The close() method should be called to release resources used by this stream, either directly, or with the try-with-resources statement.
-Implementation Requirements:
-Subclasses are responsible for the cleanup of resources acquired by the subclass. Subclasses requiring that resource cleanup take place after a stream becomes unreachable should use Cleaner or some other mechanism.
