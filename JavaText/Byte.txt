@@ -1,0 +1,7 @@
+public final class Byte
+extends Number
+implements Comparable<Byte>, Constable
+The Byte class wraps a value of primitive type byte in an object. An object of type Byte contains a single field whose type is byte.
+In addition, this class provides several methods for converting a byte to a String and a String to a byte, as well as other constants and methods useful when dealing with a byte.
+
+This is a value-based class; programmers should treat instances that are equal as interchangeable and should not use instances for synchronization, or unpredictable behavior may occur. For example, in a future release, synchronization may fail.

@@ -1,0 +1,11 @@
+TASK
+
+Create a Client Server file that can communicate with each other. 
+Client will send:
+1. File name via writeUTF()
+2. File size via writeLong()
+3. Bytes
+
+Server will receive the input and create the file in a specified database. 
+
+Use DataOutputStream and DataInputStream. 
