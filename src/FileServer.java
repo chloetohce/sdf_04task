@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 public class FileServer {
     public static void main(String[] args) throws IOException {
         String dbStr = "db";
-        int port = 5000;
+        int port = 3000;
         if (args.length == 2) {
             port = Integer.parseInt(args[0]);
             dbStr = args[1];

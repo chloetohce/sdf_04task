@@ -1,7 +1,10 @@
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,12 +27,9 @@ public class ConnectionHandler implements Runnable{
 
             String fTemp = dis.readUTF();
             String fileName = fTemp.substring(fTemp.lastIndexOf(File.separator) + 1);
-            // System.out.println(fileName);
             Long fileSize = dis.readLong();
-            // System.out.println(fileSize);
             byte[] fileMsg = new byte[fileSize.intValue()]; //Data is read into here. 
             int read = dis.read(fileMsg);
-            // System.out.println(read);
 
             
 
@@ -40,12 +40,21 @@ public class ConnectionHandler implements Runnable{
             }
 
             // reading the message and copying to db
-            FileWriter fw = new FileWriter(f,false);
-            BufferedWriter bw = new BufferedWriter(fw);
-            
-            bw.write(new String(fileMsg));
+            FileOutputStream fos = new FileOutputStream(f, false);
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
 
-            bw.flush();
+            int bytesRead = 0;
+            int bytesRecv = 0;
+            byte[] buff = new byte[4*1024];
+            System.out.println(fileSize);
+            while (bytesRecv < fileSize) {
+                bytesRead = dis.read(buff);
+                bytesRecv += bytesRead;
+                bos.write(buff, 0, bytesRead);
+                System.out.println("recv: " + bytesRecv);
+            }
+
+            bos.flush();
             conn.close();
         } catch (IOException e) {
             e.printStackTrace();
