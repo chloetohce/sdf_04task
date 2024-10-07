@@ -1,11 +1,7 @@
-
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -28,13 +24,9 @@ public class ConnectionHandler implements Runnable{
             String fTemp = dis.readUTF();
             String fileName = fTemp.substring(fTemp.lastIndexOf(File.separator) + 1);
             Long fileSize = dis.readLong();
-            byte[] fileMsg = new byte[fileSize.intValue()]; //Data is read into here. 
-            int read = dis.read(fileMsg);
-
             
-
             // If file does not exist in db, create
-            File f = new File(db.getPath() + File.separator + fileName);
+            File f = new File(db.getPath(), fileName);
             if (!f.exists()) {
                 f.createNewFile();
             }
@@ -46,15 +38,18 @@ public class ConnectionHandler implements Runnable{
             int bytesRead = 0;
             int bytesRecv = 0;
             byte[] buff = new byte[4*1024];
-            System.out.println(fileSize);
             while (bytesRecv < fileSize) {
                 bytesRead = dis.read(buff);
                 bytesRecv += bytesRead;
                 bos.write(buff, 0, bytesRead);
-                System.out.println("recv: " + bytesRecv);
             }
 
+            System.out.println("Received file size: " + bytesRecv);
+
+            //removing bos.flush() somehow fixed the issue of not getting the full file?? but now it isn't writing to the file?????
+            //and now readding it back somehow worked???????
             bos.flush();
+            bos.close();
             conn.close();
         } catch (IOException e) {
             e.printStackTrace();

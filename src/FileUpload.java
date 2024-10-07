@@ -1,17 +1,12 @@
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.Console;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class FileUpload {
     // Client
@@ -22,9 +17,14 @@ public class FileUpload {
             port = Integer.parseInt(args[0]);
 
         Socket socket = new Socket("localhost", port);
-        Console console = System.console();
 
-        String fileName = console.readLine("Enter file to upload to server: ");
+        //String fileName = console.readLine("Enter file to upload to server: "); 
+        // Above doesn't work with Windows because of backslash character as File.separator
+        // Java strings automatically reads it as a escape character, and deletes it from string, which affected downstream code. 
+        // Found that scanner doesn't do this. 
+        System.out.print("Enter file to upload: ");
+        Scanner s = new Scanner(System.in);
+        String fileName = s.nextLine();
 
         OutputStream os = socket.getOutputStream();
         DataOutputStream dos = new DataOutputStream(os);
@@ -37,7 +37,6 @@ public class FileUpload {
          */
         File file = new File(fileName);
         Long fileSize = file.length();
-        byte[] fileMsg = new byte[fileSize.intValue()];
 
         // Reading file content to send
         FileInputStream fis = new FileInputStream(file);
@@ -49,17 +48,13 @@ public class FileUpload {
 
         byte[] buff = new byte[4 * 1024]; // Creating a 4k buffer; some files can be very big. 
         int bytesRead = 0;
-        int bytesSent = 0;
         while ((bytesRead = bis.read(buff)) > 0) { // fill buffer, and tell me how much is read. Will become -1 if there is no more to read
-            System.out.println("read: " + bytesRead);
-            bytesSent += bytesRead;
-            System.out.println("sent: " + bytesSent);
             dos.write(buff, 0, bytesRead); //write to socket, starting from 0 to whatever we have read. 
         }
 
+        s.close();
         dos.flush();
-        os.flush();
-        
+        bis.close();        
         socket.close();
         
     }
